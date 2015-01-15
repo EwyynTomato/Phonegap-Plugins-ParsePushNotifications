@@ -40,14 +40,11 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
    @Override
    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException
    {
-
       Log.v(TAG, "execute: action=" + action);
 
       if (action.equalsIgnoreCase("register"))
       {
          JSONObject params = args.optJSONObject(0);
-
-         Parse.initialize(getApplicationContext(), params.optString("appId", ""), params.optString("clientKey", ""));
 
          // login user and link Installation with User
          String username = params.optString("username", "");
@@ -77,62 +74,15 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
 
          return true;
       }
-      else if (action.equalsIgnoreCase("unregister"))
+      else if (action.equalsIgnoreCase("init"))
       {
-
-         ParseInstallation.getCurrentInstallation().deleteInBackground();
+         JSONObject params = args.optJSONObject(0);
+         Parse.initialize(getApplicationContext(), params.optString("appId", ""), params.optString("clientKey", ""));
 
          callbackContext.success();
 
          return true;
       }
-      else if (action.equalsIgnoreCase("getInstallationId"))
-      {
-
-         // no installation tokens on android
-         callbackContext.success();
-
-         return true;
-      }
-      else if (action.equalsIgnoreCase("getSubscriptions"))
-      {
-
-         Set<String> channels = PushService.getSubscriptions(getApplicationContext());
-
-         JSONArray subscriptions = new JSONArray();
-
-         for (String c : channels)
-         {
-            subscriptions.put(c);
-         }
-
-         callbackContext.success(subscriptions);
-
-         return true;
-      }
-      else if (action.equalsIgnoreCase("subscribeToChannel"))
-      {
-
-         String channel = args.optString(0);
-
-         ParsePush.subscribeInBackground(channel);
-
-         callbackContext.success();
-
-         return true;
-      }
-      else if (action.equalsIgnoreCase("unsubscribeFromChannel"))
-      {
-
-         String channel = args.optString(0);
-
-         ParsePush.unsubscribeInBackground(channel);
-
-         callbackContext.success();
-
-         return true;
-      }
-
       return false;
    }
 
