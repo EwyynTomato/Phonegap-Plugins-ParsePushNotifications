@@ -116,7 +116,7 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
 
          String channel = args.optString(0);
 
-         PushService.subscribeInBackground(channel);
+         PushService.subscribe(getApplicationContext(), channel, PushHandlerActivity.class);
 
          callbackContext.success();
 
@@ -127,7 +127,7 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
 
          String channel = args.optString(0);
 
-         PushService.unsubscribeInBackground(channel);
+         PushService.unsubscribe(getApplicationContext(), channel);
 
          callbackContext.success();
 
