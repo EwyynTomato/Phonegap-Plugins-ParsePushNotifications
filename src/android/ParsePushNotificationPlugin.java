@@ -52,20 +52,19 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
          // login user and link Installation with User
          String username = params.optString("username", "");
          String password = params.optString("password", "");
-         ParseUser.logInInBackground(username, password, new LogInCallback()
-         {
-            public void done(ParseUser user, ParseException e)
-            {
-               if (user != null)
-               {
-                  ParseInstallation.getCurrentInstallation().put("user", user);
-                  ParseInstallation.getCurrentInstallation().saveInBackground();
-               }
-            }
-         });
 
-         callbackContext.success();
-         canDeliverNotifications = true;
+         try
+         {
+            ParseUser user = ParseUser.logIn(username, password);
+            ParseInstallation.getCurrentInstallation().put("user", user);
+            ParseInstallation.getCurrentInstallation().saveInBackground();
+            callbackContext.success();
+            canDeliverNotifications = true;
+         }
+         catch (ParseException e)
+         {
+            Log.v(TAG, "login failed with username;" + username + "; Installation object not created");
+         }
 
          cordova.getThreadPool().execute(new Runnable()
          {
