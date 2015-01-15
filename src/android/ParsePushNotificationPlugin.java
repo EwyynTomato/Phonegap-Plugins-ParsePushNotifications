@@ -58,7 +58,7 @@ public class ParsePushNotificationPlugin extends CordovaPlugin
             {
                if (user != null)
                {
-                  ParseInstallation.getCurrentInstallation().add("user", user);
+                  ParseInstallation.getCurrentInstallation().put("user", user);
                   ParseInstallation.getCurrentInstallation().saveInBackground();
                }
             }
