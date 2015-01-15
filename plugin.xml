@@ -50,26 +50,34 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
+		    
 			<permission android:protectionLevel="signature" android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
 			<uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
+			
 			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 			<uses-permission android:name="android.permission.INTERNET" />
 			<uses-permission android:name="android.permission.WAKE_LOCK" />
 			<uses-permission android:name="android.permission.VIBRATE" />
 			<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 			<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-			<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+			<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />		    
+			
 		</config-file>
 		
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
+		    
+		    <activity android:name="com.stratogos.cordova.parsePushNotifications.PushHandlerActivity"/>
+
+		    <service android:name="com.stratogos.cordova.parsePushNotifications.GCMIntentService"/>
 		    <service android:name="com.parse.PushService" />
+
 		    <receiver android:name="com.parse.ParseBroadcastReceiver">
 		    	<intent-filter>
 		    			<action android:name="android.intent.action.BOOT_COMPLETED" />
 						<action android:name="android.intent.action.USER_PRESENT" />
 				</intent-filter>
 		    </receiver>
-		    <receiver
+			<receiver
 	            android:name="com.parse.ParsePushBroadcastReceiver"
 	            android:exported="false">
 	            <intent-filter>
@@ -77,8 +85,7 @@
 	                <action android:name="com.parse.push.intent.DELETE" />
 	                <action android:name="com.parse.push.intent.OPEN" />
 	            </intent-filter>
-        	</receiver>
-
+	        </receiver>
 		    <receiver android:name="com.parse.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
 				<intent-filter >
 		        	<action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -86,12 +93,16 @@
 		            <category android:name="$PACKAGE_NAME" />
 				</intent-filter>
 			</receiver>		    
+			
 		</config-file>
 
 		<source-file src="src/android/ParsePushNotificationPlugin.java" target-dir="src/com/stratogos/cordova/parsePushNotifications/" />
+		<source-file src="src/android/PushHandlerActivity.java" target-dir="src/com/stratogos/cordova/parsePushNotifications/" />
 		<source-file src="src/android/lib/android/gcm.jar" target-dir="libs/" framework="true" />						
-		<source-file src="src/android/lib/parse/Parse-1.8.1.jar" target-dir="libs/" framework="true" />					
-		<source-file src="src/android/lib/parse/bolts-android-1.1.4.jar" target-dir="libs/" framework="true" />			
+		<source-file src="src/android/lib/parse/Parse-1.8.1.jar" target-dir="libs/" framework="true" />			
+		<source-file src="src/android/lib/parse/bolts-android-1.1.4.jar" target-dir="libs/" framework="true" />		
     </platform>
+
+   
 </plugin>
 	
