@@ -68,7 +68,6 @@
 		    
 		    <activity android:name="com.stratogos.cordova.parsePushNotifications.PushHandlerActivity"/>
 
-		    <service android:name="com.stratogos.cordova.parsePushNotifications.GCMIntentService"/>
 		    <service android:name="com.parse.PushService" />
 
 		    <receiver android:name="com.parse.ParseBroadcastReceiver">
