@@ -1,41 +1,16 @@
-	var exec = require('cordova/exec');
-    var pluginNativeName = "ParsePushNotificationPlugin";
-               
-    var ParsePushPlugin = function () {
-    };
+var exec = require('cordova/exec');
+var pluginNativeName = "ParsePushNotificationPlugin";
 
-               
-    ParsePushPlugin.prototype = {
-    	
-		register : function(options, successCallback, errorCallback) {
-           
-			exec(successCallback,errorCallback,pluginNativeName,'register',[options]);
-		},
-		
-		getInstallationId : function(successCallback, errorCallback) {
-               
-			exec(successCallback,errorCallback,pluginNativeName,'getInstallationId',[]);
-		},
-		
-		getSubscriptions : function(successCallback, errorCallback) {
-               
-			exec(successCallback,errorCallback,pluginNativeName,'getSubscriptions',[]);
-		},
-		
-		subscribe : function(channel, successCallback, errorCallback) {
-               
-			exec(successCallback,errorCallback,pluginNativeName,'subscribeToChannel',[channel]);
-		},
-		
-		unsubscribe : function(channel, successCallback, errorCallback) {
-               
-			exec(successCallback,errorCallback,pluginNativeName,'unsubscribeFromChannel',[channel]);
-		},
-		
-               ontrigger : function(state, json){}
-    };
-	
-               
-    module.exports = new ParsePushPlugin();
+var ParsePushPlugin = function() {
+};
 
+ParsePushPlugin.prototype = {
+  init: function(options, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, pluginNativeName, 'init', [options]);
+  },
+  register: function(options, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, pluginNativeName, 'register', [options]);
+  }
+};
 
+module.exports = new ParsePushPlugin();
