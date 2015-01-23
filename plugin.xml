@@ -97,6 +97,7 @@
 
 		<source-file src="src/android/ParsePushNotificationPlugin.java" target-dir="src/com/stratogos/cordova/parsePushNotifications/" />
 		<source-file src="src/android/PushHandlerActivity.java" target-dir="src/com/stratogos/cordova/parsePushNotifications/" />
+		<source-file src="src/android/ParseApplication.java" target-dir="src/com/stratogos/cordova/parsePushNotifications/" />
 		<source-file src="src/android/lib/android/gcm.jar" target-dir="libs/" framework="true" />						
 		<source-file src="src/android/lib/parse/Parse-1.8.1.jar" target-dir="libs/" framework="true" />			
 		<source-file src="src/android/lib/parse/bolts-android-1.1.4.jar" target-dir="libs/" framework="true" />		
