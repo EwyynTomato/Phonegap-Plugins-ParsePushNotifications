@@ -4,6 +4,7 @@ import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
+import com.medium.hyperlocal.R;
 
 public class ParseApplication extends Application
 {
@@ -15,8 +16,7 @@ public class ParseApplication extends Application
 
    public void onCreate()
    {
-      // TODO: Tomato, tokenize id and key to be inserted by Grunt
-      Parse.initialize(getApplicationContext(), "tIm8aiNUNF5x4Uv8MZ5jEmITYE5AEHC1uPnsOP18", "sY1bFjAoLC8LzQ3RPS71jgJnFGNNsjIcXVE8b3OO");
+      Parse.initialize(getApplicationContext(), getString(R.string.parse_app_id), getString(R.string.parse_client_key));
       PushService.setDefaultPushCallback(getApplicationContext(), PushHandlerActivity.class);
       ParseInstallation.getCurrentInstallation().saveInBackground();
    }
