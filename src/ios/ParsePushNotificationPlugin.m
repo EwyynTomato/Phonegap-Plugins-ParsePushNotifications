@@ -62,87 +62,46 @@
         
     }
     
-- (void)unregister:(CDVInvokedUrlCommand*)command;
-    {
-        self.callbackId = command.callbackId;
-        
-        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-        [self successWithMessage:@"unregistered"];
+- (void)register:(CDVInvokedUrlCommand*)command;
+{
+    NSMutableDictionary* options = [command.arguments objectAtIndex:0];
+    
+    NSDictionary *parsePlist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ParsePush" ofType:@"plist"]];
+    NSString *appId = [parsePlist objectForKey:@"appId"];
+    NSString *clientKey = [parsePlist objectForKey:@"clientKey"];
+    [Parse setApplicationId:appId clientKey:clientKey];
+
+    NSString *username = [options objectForKey:@"username"];
+    NSString *password = [options objectForKey:@"password"];
+    id user = [PFUser logInWithUsername:username password:password];
+    PFInstallation *pfinstallation = [PFInstallation currentInstallation];
+    pfinstallation[@"user"] = user;
+    [pfinstallation saveInBackground];
+
+  // Register for Push Notitications, if running iOS 8
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+      UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                      UIUserNotificationTypeBadge |
+                                                      UIUserNotificationTypeSound);
+      UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                               categories:nil];
+      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else {
+      // Register for Push Notifications before iOS 8
+      [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                       UIRemoteNotificationTypeAlert |
+                                                       UIRemoteNotificationTypeSound)];
     }
     
-    - (void)register:(CDVInvokedUrlCommand*)command;
-    {
-        NSMutableDictionary* options = [command.arguments objectAtIndex:0];
-        
-        NSString *appId = [options objectForKey:@"appId"];
-        NSString *clientKey = [options objectForKey:@"clientKey"];
-        
-        [Parse setApplicationId:appId clientKey:clientKey];
-        
-	  // Register for Push Notitications, if running iOS 8
-	    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-	      UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-	                                                      UIUserNotificationTypeBadge |
-	                                                      UIUserNotificationTypeSound);
-	      UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-	                                                                               categories:nil];
-	      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-	      [[UIApplication sharedApplication] registerForRemoteNotifications];
-	    } else {
-	      // Register for Push Notifications before iOS 8
-	      [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-	                                                       UIRemoteNotificationTypeAlert |
-	                                                       UIRemoteNotificationTypeSound)];
-	    }
-        
-        self.callbackId = command.callbackId;
-        
-        [self flushNotificationEventQueue];
-        canDeliverNotifications = YES;
-    }
+    self.callbackId = command.callbackId;
     
+    [self flushNotificationEventQueue];
+    canDeliverNotifications = YES;
+}
     
-- (void)getInstallationId:(CDVInvokedUrlCommand*) command
-    {
-        [self.commandDelegate runInBackground:^{
-            CDVPluginResult* pluginResult = nil;
-            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-            NSString *objectId = currentInstallation.objectId;
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:objectId];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }];
-    }
-    
-- (void)getSubscriptions: (CDVInvokedUrlCommand *)command
-    {
-        NSArray *channels = [PFInstallation currentInstallation].channels;
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:channels];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }
-    
-- (void)subscribeToChannel: (CDVInvokedUrlCommand *)command
-    {
-        CDVPluginResult* pluginResult = nil;
-        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        NSString *channel = [command.arguments objectAtIndex:0];
-        [currentInstallation addUniqueObject:channel forKey:@"channels"];
-        [currentInstallation saveInBackground];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }
-    
-- (void)unsubscribeFromChannel: (CDVInvokedUrlCommand *)command
-    {
-        CDVPluginResult* pluginResult = nil;
-        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        NSString *channel = [command.arguments objectAtIndex:0];
-        [currentInstallation removeObject:channel forKey:@"channels"];
-        [currentInstallation saveInBackground];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }
-    
-    
+
+
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     NSMutableDictionary *results = [NSMutableDictionary dictionary];

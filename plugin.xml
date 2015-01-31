@@ -27,7 +27,10 @@
 		
 		<header-file src="src/ios/ParsePushNotificationPlugin.h" />
         <source-file src="src/ios/ParsePushNotificationPlugin.m" />
-	   
+        <source-file src="src/ios/FBMissingSymbols.m" />
+    
+        <resource-file src="src/ios/ParsePush.plist" />
+
         <framework src="libz.dylib" />
         <framework src="AudioToolbox.framework" />
         <framework src="CFNetwork.framework" />
