@@ -8,7 +8,6 @@
 
 #import "ParsePushNotificationPlugin.h"
 #import <Parse/Parse.h>
-#import <Crashlytics/Crashlytics.h>
 
 @implementation ParsePushNotificationPlugin
     
@@ -70,9 +69,7 @@
     NSDictionary *parsePlist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ParsePush" ofType:@"plist"]];
     NSString *appId = [parsePlist objectForKey:@"appId"];
     NSString *clientKey = [parsePlist objectForKey:@"clientKey"];
-    NSString *crashlyticsId = [parsePlist objectForKey:@"crashlyticsId"];
 
-    [Crashlytics startWithAPIKey:crashlyticsId];
     [Parse setApplicationId:appId clientKey:clientKey];
 
     NSString *username = [options objectForKey:@"username"];
